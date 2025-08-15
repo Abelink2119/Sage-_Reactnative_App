@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { SafeAreaView, Text, Pressable, StyleSheet } from "react-native";
+import { store, increment, decrement, reset } from "./src/store";
 
-export default function App() {
-  const [count, setCount] = useState(0);
+function CounterScreen() {
+  const count = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -12,7 +15,7 @@ export default function App() {
       <Pressable
         style={styles.button}
         android_ripple={{ color: "#ddd" }}
-        onPress={() => setCount(count - 1)}
+        onPress={() => dispatch(decrement())}
       >
         <Text style={styles.btnText}>-1</Text>
       </Pressable>
@@ -20,7 +23,7 @@ export default function App() {
       <Pressable
         style={styles.button}
         android_ripple={{ color: "#ddd" }}
-        onPress={() => setCount(count + 1)}
+        onPress={() => dispatch(increment())}
       >
         <Text style={styles.btnText}>+1</Text>
       </Pressable>
@@ -28,11 +31,19 @@ export default function App() {
       <Pressable
         style={[styles.button, { backgroundColor: "#10b981" }]}
         android_ripple={{ color: "#fff" }}
-        onPress={() => setCount(0)}
+        onPress={() => dispatch(reset())}
       >
         <Text style={styles.btnText}>Reset</Text>
       </Pressable>
     </SafeAreaView>
+  );
+}
+
+export default function App() {
+  return (
+    <Provider store={store}>
+      <CounterScreen />
+    </Provider>
   );
 }
 
